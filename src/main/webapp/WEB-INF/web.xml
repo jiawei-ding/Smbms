@@ -24,7 +24,8 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/jsp/logout.do</url-pattern>
     </servlet-mapping>
-    
+
+    <!--过滤器-->
     <!--字符编码过滤器-->
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
@@ -33,6 +34,15 @@
     <filter-mapping>
         <filter-name>CharacterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--用户登录过滤器-->
+    <filter>
+        <filter-name>SysFilter</filter-name>
+        <filter-class>com.kuang.filter.SysFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SysFilter</filter-name>
+        <url-pattern>/jsp/*</url-pattern>
     </filter-mapping>
 
     <!--设置首页-->
