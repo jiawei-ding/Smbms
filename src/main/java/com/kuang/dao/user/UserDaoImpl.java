@@ -37,4 +37,17 @@ public class UserDaoImpl implements UserDao{
         }
         return user;
     }
+
+    public int updatePwd(Connection connection, int id, String pwd) throws Exception {
+        int flag = 0;
+        PreparedStatement pstm = null;
+        System.out.println("DAO: " + pwd);
+        if(connection != null){
+            String sql = "update smbms_user set userPassword= ? where id = ?";
+            Object[] params = {pwd, id};
+            flag = BaseDao.execute(connection, pstm, sql, params);
+            BaseDao.closeResource(null, pstm, null);
+        }
+        return flag;
+    }
 }
