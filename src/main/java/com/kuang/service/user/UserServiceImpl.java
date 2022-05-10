@@ -7,6 +7,7 @@ import com.kuang.pojo.User;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class UserServiceImpl implements  UserService{
 
@@ -48,6 +49,41 @@ public class UserServiceImpl implements  UserService{
             BaseDao.closeResource(connection, null, null);
         }
         return flag;
+    }
+
+    public int getUserCount(String queryUserName, int queryUserRole) {
+        Connection connection = null;
+        int count = 0;
+
+        try {
+            connection = BaseDao.getConnection();
+            count = userDao.getUserCount(connection, queryUserName, queryUserRole);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            BaseDao.closeResource(connection, null , null);
+        }
+        return count;
+    }
+
+    public List<User> getUserList(String queryUserName, int queryUserRole, int currentPageNo, int pageSize) {
+        // TODO Auto-generated method stub
+        Connection connection = null;
+        List<User> userList = null;
+        System.out.println("queryUserName ---- > " + queryUserName);
+        System.out.println("queryUserRole ---- > " + queryUserRole);
+        System.out.println("currentPageNo ---- > " + currentPageNo);
+        System.out.println("pageSize ---- > " + pageSize);
+        try {
+            connection = BaseDao.getConnection();
+            userList = userDao.getUserList(connection, queryUserName,queryUserRole,currentPageNo,pageSize);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            BaseDao.closeResource(connection, null, null);
+        }
+        return userList;
     }
 
 }
