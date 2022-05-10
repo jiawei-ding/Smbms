@@ -1,4 +1,5 @@
-# JavaWeb Project
+# JavaWeb Project Study
+### 来源：https://www.bilibili.com/video/BV12J411M7Sj
 ## 登录功能
 ![img.png](img.png)
 - 登录--->接收用户的登录请求--->处理用户的请求（获取用户登录的参数，username，
