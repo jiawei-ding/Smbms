@@ -7,6 +7,7 @@ import com.kuang.pojo.User;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements  UserService{
@@ -84,6 +85,52 @@ public class UserServiceImpl implements  UserService{
             BaseDao.closeResource(connection, null, null);
         }
         return userList;
+    }
+
+    //添加用户
+    public boolean add(User user) {
+        boolean flag = false;
+        Connection connection = null;
+        try {
+            connection = BaseDao.getConnection();
+            connection.setAutoCommit(false);//开启jdbc事务管理
+            int updateRows = userDao.add(connection, user);
+            connection.commit();
+            if(updateRows > 0){
+                flag = true;
+                System.out.println("add user success !");
+            }else{
+                System.out.println("add user failed !");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            try{
+                System.out.println("rollback =================");
+                connection.rollback();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }finally {
+            //在service层进行connection连接的关闭
+            BaseDao.closeResource(connection, null, null);
+        }
+        return flag;
+    }
+
+    public User selectUserCodeExist(String userCode) {
+        // TODO Auto-generated method stub
+        Connection connection = null;
+        User user = null;
+        try {
+            connection = BaseDao.getConnection();
+            user = userDao.getLoginUser(connection, userCode);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            BaseDao.closeResource(connection, null, null);
+        }
+        return user;
     }
 
 }

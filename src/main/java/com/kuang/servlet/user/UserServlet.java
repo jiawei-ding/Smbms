@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +33,87 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
+        System.out.println("method----> " + method);
+
         if(method != null && method.equals("savepwd")){
             this.updatePwd(req, resp);
         }else if(method != null && method.equals("pwdmodify")){
             this.pwdModify(req, resp);
         }else if(method != null && method.equals("query")){
             this.query(req, resp);
+        }else if(method != null && method.equals("add")){
+            this.add(req, resp);
+        }else if(method != null && method.equals("ucexist")){
+            this.userCodeExist(req, resp);
         }
+    }
+
+    private void userCodeExist(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //判断用户账号是否可用
+        String userCode = request.getParameter("userCode");
+
+        HashMap<String, String> resultMap = new HashMap<String, String>();
+        if(StringUtils.isNullOrEmpty(userCode)){
+            //userCode == null || userCode.equals("")
+            resultMap.put("userCode", "exist");
+        }else{
+            UserService userService = new UserServiceImpl();
+            User user = userService.selectUserCodeExist(userCode);
+            if(null != user){
+                resultMap.put("userCode","exist");
+            }else{
+                resultMap.put("userCode", "notexist");
+            }
+        }
+
+        //把resultMap转为json字符串以json的形式输出
+        //配置上下文的输出类型
+        response.setContentType("application/json");
+        //从response对象中获取往外输出的writer对象
+        PrintWriter outPrintWriter = response.getWriter();
+        //把resultMap转为json字符串 输出
+        outPrintWriter.write(JSONArray.toJSONString(resultMap));
+        outPrintWriter.flush();//刷新
+        outPrintWriter.close();//关闭流
+    }
+
+    private void add(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        System.out.println("add()================");
+        String userCode = request.getParameter("userCode");
+        String userName = request.getParameter("userName");
+        String userPassword = request.getParameter("userPassword");
+        String gender = request.getParameter("gender");
+        String birthday = request.getParameter("birthday");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String userRole = request.getParameter("userRole");
+
+        User user = new User();
+        user.setUserCode(userCode);
+        user.setUserName(userName);
+        user.setUserPassword(userPassword);
+        user.setAddress(address);
+        try {
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(birthday));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        user.setGender(Integer.valueOf(gender));
+        user.setPhone(phone);
+        user.setUserRole(Integer.valueOf(userRole));
+        user.setCreationDate(new Date());
+        user.setCreatedBy(((User)request.getSession().getAttribute(Constants.USER_SESSION)).getId());
+
+        UserService userService = new UserServiceImpl();
+        if(userService.add(user)){
+            response.sendRedirect(request.getContextPath()+"/jsp/user.do?method=query");
+        }else{
+            request.getRequestDispatcher("useradd.jsp").forward(request, response);
+        }
+
     }
 
     private void query(HttpServletRequest request, HttpServletResponse response)

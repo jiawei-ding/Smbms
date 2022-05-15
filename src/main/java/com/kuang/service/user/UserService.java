@@ -32,4 +32,18 @@ public interface UserService {
      * @return
      */
     public List<User> getUserList(String queryUserName, int queryUserRole, int currentPageNo, int pageSize);
+
+    /**
+     * 增加用户信息
+     * @param user
+     * @return
+     */
+    public boolean add(User user);
+
+    /**
+     * 根据userCode查询出User
+     * @param userCode
+     * @return
+     */
+    public User selectUserCodeExist(String userCode);
 }
