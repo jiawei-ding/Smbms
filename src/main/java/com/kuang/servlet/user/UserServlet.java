@@ -45,7 +45,39 @@ public class UserServlet extends HttpServlet {
             this.add(req, resp);
         }else if(method != null && method.equals("ucexist")){
             this.userCodeExist(req, resp);
+        }else  if(method != null && method.equals("deluser")){
+            this.delUser(req, resp);
         }
+    }
+
+    private void delUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        System.out.println("==============> enter delUser servlet");
+
+        String id = req.getParameter("uid");
+        Integer delId = 0;
+        try{
+            delId = Integer.parseInt(id);
+        }catch (Exception e){
+            delId = 0;
+        }
+        HashMap<String, String> resultMap = new HashMap<String, String>();
+        if(delId <= 0){
+            resultMap.put("delResult", "notexist");
+        }else{
+            UserService userService = new UserServiceImpl();
+            if(userService.deleteUserById(delId)){
+                resultMap.put("delResult", "true");
+            }else{
+                resultMap.put("delResult", "false");
+            }
+        }
+
+        //把resultMap转换为json对象输出
+        resp.setContentType("application/json");
+        PrintWriter outPrintWriter = resp.getWriter();
+        outPrintWriter.write(JSONArray.toJSONString(resultMap));
+        outPrintWriter.flush();
+        outPrintWriter.close();
     }
 
     private void userCodeExist(HttpServletRequest request, HttpServletResponse response)

@@ -38,4 +38,12 @@ public interface UserDao {
      */
     public int add(Connection connection, User user)throws Exception;
 
+    /**
+     * 通过userId删除user
+     * @param delId
+     * @return
+     * @throws Exception
+     */
+    public int deleteUserById(Connection connection, Integer delId)throws Exception;
+
 }

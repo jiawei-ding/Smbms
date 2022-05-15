@@ -46,4 +46,11 @@ public interface UserService {
      * @return
      */
     public User selectUserCodeExist(String userCode);
+
+    /**
+     * 根据ID删除user
+     * @param delId
+     * @return
+     */
+    public boolean deleteUserById(Integer delId);
 }

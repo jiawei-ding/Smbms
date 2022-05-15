@@ -148,5 +148,19 @@ public class UserDaoImpl implements UserDao{
         return updateRows;
     }
 
+    //删除用户
+    public int deleteUserById(Connection connection, Integer delId) throws Exception {
+        System.out.println("==============> enter delUser dao");
+        int flag = 0;
+        PreparedStatement pstm = null;
+        if(null != connection){
+            String sql = "delete from smbms_user where id = ?";
+            Object[] params = {delId};
+            flag = BaseDao.execute(connection, pstm, sql, params);
+            BaseDao.closeResource(null, pstm, null);
+        }
+        return flag;
+    }
+
 
 }
