@@ -168,4 +168,21 @@ public class UserServiceImpl implements  UserService{
         return user;
     }
 
+    public boolean modify(User user) {
+        System.out.println("==============> enter modify service");
+        Connection connection = null;
+        boolean flag = false;
+
+        try {
+            connection = BaseDao.getConnection();
+            if(userDao.modify(connection, user) > 0)
+                flag = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+        return flag;
+    }
+
 }

@@ -193,5 +193,21 @@ public class UserDaoImpl implements UserDao{
         return user;
     }
 
+    public int modify(Connection connection, User user) throws Exception {
+        System.out.println("==============> enter modify Dao");
+        int flag = 0;
+        PreparedStatement pstm = null;
+        if(null != connection){
+            String sql = "update smbms_user set userName=?,"+
+                    "gender=?,birthday=?,phone=?,address=?,userRole=?,modifyBy=?,modifyDate=? where id = ? ";
+            Object[] params = {user.getUserName(),user.getGender(),user.getBirthday(),
+                    user.getPhone(),user.getAddress(),user.getUserRole(),user.getModifyBy(),
+                    user.getModifyDate(),user.getId()};
+            flag = BaseDao.execute(connection, pstm, sql, params);
+            BaseDao.closeResource(null, pstm, null);
+        }
+        return flag;
+    }
+
 
 }

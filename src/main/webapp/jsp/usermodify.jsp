@@ -46,13 +46,16 @@
                     <label for="userAddress">用户地址：</label>
                     <input type="text" name="address" id="address" value="${user.address }">
                 </div>
-				<div>
-                    <label >用户角色：</label>
-                    <!-- 列出所有的角色分类 -->
-					<input type="hidden" value="${user.userRole }" id="rid" />
-					<select name="userRole" id="userRole"></select>
-        			<font color="red"></font>
-                </div>
+            <div>
+                <label >用户角色：</label>
+                <!-- 列出所有的角色分类 -->
+                <select name="userRole" id="userRole">
+                    <option value="1" selected="selected">系统管理员</option>
+                    <option value="2" selected="selected">经理</option>
+                    <option value="3" selected="selected">普通员工</option>
+                </select>
+                <font color="red"></font>
+            </div>
 			 <div class="providerAddBtn">
                     <input type="button" name="save" id="save" value="保存" />
                     <input type="button" id="back" name="back" value="返回"/>

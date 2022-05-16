@@ -55,4 +55,13 @@ public interface UserDao {
      */
     public User getUserById(Connection connection, String id)throws Exception;
 
+    /**
+     * 修改用户信息
+     * @param connection
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    public int modify(Connection connection, User user)throws Exception;
+
 }

@@ -1,5 +1,6 @@
 package com.kuang.servlet.user;
 
+import com.alibaba.fastjson.JSON;
 import com.kuang.pojo.Role;
 import com.kuang.pojo.User;
 import com.kuang.service.role.RoleService;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,7 +51,62 @@ public class UserServlet extends HttpServlet {
             this.delUser(req, resp);
         }else if(method != null && method.equals("view")){
             this.getUerById(req, resp, "userview.jsp");
+        }else if(method != null && method.equals("modify")){
+            this.getUerById(req, resp, "usermodify.jsp");
+        }else if(method != null && method.equals("modifyexe")){
+            this.modify(req, resp);
         }
+    }
+
+//    private void getRoleList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        List<Role> roleList = null;
+//        RoleService roleService = new RoleServiceImpl();
+//        roleList = roleService.getRoleList();
+//        //把roleList转换为json对象输出
+//        resp.setContentType("application/json");
+//        PrintWriter outPrintWriter = resp.getWriter();
+//        outPrintWriter.write(JSON.toJSONString(roleList));
+//        outPrintWriter.flush();
+//        outPrintWriter.close();
+//    }
+
+    //更改用户数据
+    private void modify(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        System.out.println("==============> enter modify servlet");
+        //从前端表单获取数据
+        String id = request.getParameter("uid");
+        String userName = request.getParameter("userName");
+        String gender = request.getParameter("gender");
+        String birthday = request.getParameter("birthday");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String userRole = request.getParameter("userRole");
+
+        //实例化user
+        User user = new User();
+        user.setId(Integer.valueOf(id));
+        user.setUserName(userName);
+        user.setGender(Integer.valueOf(gender));
+        try {
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(birthday));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setUserRole(Integer.valueOf(userRole));
+        user.setModifyBy(((User)request.getSession().getAttribute(Constants.USER_SESSION)).getId());
+        user.setModifyDate(new Date());
+
+        //调用service层方法
+        UserService userService = new UserServiceImpl();
+        if(userService.modify(user)){
+            response.sendRedirect(request.getContextPath()+"/jsp/user.do?method=query");
+        }else{
+            request.getRequestDispatcher("usermodify.jsp").forward(request, response);
+        }
+
     }
 
     private void getUerById(HttpServletRequest req, HttpServletResponse resp, String url) throws ServletException, IOException {

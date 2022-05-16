@@ -60,4 +60,11 @@ public interface UserService {
      * @return
      */
     public User getUserById(String id);
+
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    public boolean modify(User user);
 }
