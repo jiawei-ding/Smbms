@@ -162,5 +162,36 @@ public class UserDaoImpl implements UserDao{
         return flag;
     }
 
+    public User getUserById(Connection connection, String id) throws Exception {
+        System.out.println("==============> enter viewUser Dao");
+        User user = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        if(null != connection){
+            String sql = "select u.*,r.roleName as userRoleName from smbms_user u,smbms_role r where u.id=? and u.userRole = r.id";
+            Object[] params = {id};
+            rs = BaseDao.execute(connection, pstm, rs, sql, params);
+            if(rs.next()){
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUserCode(rs.getString("userCode"));
+                user.setUserName(rs.getString("userName"));
+                user.setUserPassword(rs.getString("userPassword"));
+                user.setGender(rs.getInt("gender"));
+                user.setBirthday(rs.getDate("birthday"));
+                user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
+                user.setUserRole(rs.getInt("userRole"));
+                user.setCreatedBy(rs.getInt("createdBy"));
+                user.setCreationDate(rs.getTimestamp("creationDate"));
+                user.setModifyBy(rs.getInt("modifyBy"));
+                user.setModifyDate(rs.getTimestamp("modifyDate"));
+                user.setUserRoleName(rs.getString("userRoleName"));
+            }
+            BaseDao.closeResource(null , pstm, rs);
+        }
+        return user;
+    }
+
 
 }

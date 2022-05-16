@@ -46,4 +46,13 @@ public interface UserDao {
      */
     public int deleteUserById(Connection connection, Integer delId)throws Exception;
 
+    /**
+     * 通过userId获取user
+     * @param connection
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public User getUserById(Connection connection, String id)throws Exception;
+
 }

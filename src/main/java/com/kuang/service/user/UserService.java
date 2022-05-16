@@ -53,4 +53,11 @@ public interface UserService {
      * @return
      */
     public boolean deleteUserById(Integer delId);
+
+    /**
+     * 根据ID查找user
+     * @param id
+     * @return
+     */
+    public User getUserById(String id);
 }

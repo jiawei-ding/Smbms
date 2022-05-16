@@ -47,6 +47,20 @@ public class UserServlet extends HttpServlet {
             this.userCodeExist(req, resp);
         }else  if(method != null && method.equals("deluser")){
             this.delUser(req, resp);
+        }else if(method != null && method.equals("view")){
+            this.getUerById(req, resp, "userview.jsp");
+        }
+    }
+
+    private void getUerById(HttpServletRequest req, HttpServletResponse resp, String url) throws ServletException, IOException {
+        System.out.println("==============> enter viewUser servlet");
+        String id = req.getParameter("uid");
+        if(!StringUtils.isNullOrEmpty(id)){
+            //调用后台方法得到user对象
+            UserService userService = new UserServiceImpl();
+            User user = userService.getUserById(id);
+            req.setAttribute("user", user);
+            req.getRequestDispatcher(url).forward(req, resp);
         }
     }
 

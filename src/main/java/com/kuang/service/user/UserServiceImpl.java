@@ -151,4 +151,21 @@ public class UserServiceImpl implements  UserService{
         return flag;
     }
 
+    public User getUserById(String id) {
+        System.out.println("==============> enter viewUser service");
+        User user = null;
+        Connection connection = null;
+
+        try {
+            connection = BaseDao.getConnection();
+            user = userDao.getUserById(connection, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            user = null;
+        }finally {
+            BaseDao.closeResource(connection, null, null);
+        }
+        return user;
+    }
+
 }
